@@ -28,7 +28,7 @@
 
 package org.rsna.isn.sendemail;
 
-import org.rsna.isn.util.Email;
+import org.rsna.isn.util.EmailUtil;
 import org.rsna.isn.util.Environment;
 
 
@@ -47,6 +47,6 @@ public class App
         String subject = args[0];
         String body = args[1];
         
-        Email.sendUsingPropertiesFile(subject, body);
+        EmailUtil.send(subject, body);
     }  
 }
