@@ -28,12 +28,17 @@
 
 package org.rsna.isn.sendemail;
 
+import java.sql.SQLException;
+import java.util.Properties;
 import org.rsna.isn.util.EmailUtil;
 import org.rsna.isn.util.Environment;
+import org.apache.log4j.Logger;
 
-
+        
 public class App 
 {   
+    private static final Logger logger = Logger.getLogger(App.class);
+    
     public static void main(String args[]) throws Exception
     {
         if(args.length != 2)
@@ -47,6 +52,26 @@ public class App
         String subject = args[0];
         String body = args[1];
         
-        EmailUtil.send(subject, body);
+        Properties props = new Properties();
+        boolean isConnected = true;
+        
+        try 
+        {    
+                props = EmailUtil.getProperties();
+        }
+        
+        catch (SQLException ex) 
+        {
+                isConnected = false;
+                logger.error("Uncaught exception while loading email.properties file", ex);
+        }
+        
+        if (isConnected)
+        {
+                //Update properties file with DB values
+                EmailUtil.cacheEmailProp(props);
+        }
+
+        EmailUtil.sendUsingCachedProps(subject, body);
     }  
 }
